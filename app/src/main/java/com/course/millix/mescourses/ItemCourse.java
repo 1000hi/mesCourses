@@ -3,12 +3,12 @@ package com.course.millix.mescourses;
 
 import java.util.Date;
 
-public class item_course {
+public class ItemCourse {
     private String denomination;
     private Date creationDate;
     private Date doneDate;
 
-    public item_course(String denomination, Date creationDate) {
+    public ItemCourse(String denomination, Date creationDate) {
         this.denomination = denomination;
         this.creationDate = creationDate;
     }

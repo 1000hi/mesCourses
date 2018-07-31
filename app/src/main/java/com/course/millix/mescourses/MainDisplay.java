@@ -1,8 +1,11 @@
 package com.course.millix.mescourses;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -13,10 +16,12 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-public class main_display extends AppCompatActivity {
+import java.util.HashMap;
+
+public class MainDisplay extends AppCompatActivity {
 
     private String m_element = "";
-    private int y =0;
+    private SharedPreferences mPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,18 +41,34 @@ public class main_display extends AppCompatActivity {
     }
 
     private void addTextArea(String stuff) {
-        LinearLayout ll = findViewById(R.id.layout_text);
-        LinearLayout l = new LinearLayout(this);
-        l.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout mainL = findViewById(R.id.layout_text);
+        final LinearLayout subL = new LinearLayout(this);
+        subL.setOrientation(LinearLayout.HORIZONTAL);
+        final LinearLayout subsubL = new LinearLayout(this  );
+        subsubL.setOrientation(LinearLayout.HORIZONTAL);
         EditText et = new EditText(this );
+        FloatingActionButton ft = new FloatingActionButton(this);
+        ft.setImageResource(R.drawable.checked);
+        ft.setBackgroundColor(Color.BLUE);
+        ft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                subL.removeAllViews();
+            }
+        });
         et.setText(stuff);
-        l.addView(et);
-        ll.addView(l);
-    }
+        et.setKeyListener(null);
+        subsubL.addView(et);
+        subsubL.addView(ft);
+        subL.addView(subsubL);
+        mainL.addView(subL);
+}
+
 
     private void generateTextInputDialog(String titre) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(titre);
+        builder.setCancelable(false);
 
         // Set up the input
         final EditText input = new EditText(this);
@@ -71,6 +92,10 @@ public class main_display extends AppCompatActivity {
         });
 
         builder.show();
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 }
