@@ -1,8 +1,6 @@
 package com.course.millix.mescourses;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -10,18 +8,23 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
-import android.view.Display;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class MainDisplay extends AppCompatActivity {
 
     private String m_element = "";
     private SharedPreferences mPrefs;
+    private static final String PREFS_LIST = "PREFS_LIST";
+    private static final String PREFS = "PREFS";
+    private List<ItemCourse> items = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +34,17 @@ public class MainDisplay extends AppCompatActivity {
         FloatingActionButton addActionButton = findViewById(R.id.addActionButton);
 
         addActionButton.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 generateTextInputDialog("Que voulez-vous ajouter à votre liste?");
             }
         });
+        mPrefs = getSharedPreferences(PREFS,MODE_PRIVATE);
+        if(mPrefs.contains(PREFS_LIST)){
+            for(String item : mPrefs.getStringSet(PREFS_LIST,null)){
+                addTextArea(item);
+            }
+        }
 
     }
 
@@ -62,6 +70,7 @@ public class MainDisplay extends AppCompatActivity {
         subsubL.addView(ft);
         subL.addView(subsubL);
         mainL.addView(subL);
+        items.add(new ItemCourse(stuff,new Date()));
 }
 
 
@@ -97,5 +106,19 @@ public class MainDisplay extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        Set<String> set = new HashSet<>();
+        for(ItemCourse item : items){
+            set.add(item.getDenomination());
+        }
+        SharedPreferences.Editor ed = mPrefs.edit();
+        ed.putStringSet(PREFS_LIST,set);
+        ed.apply();
+    }
+
+
+    private void reGenerateList(List<String> items){
+        for (String item : items){
+            addTextArea(item);
+        }
     }
 }
