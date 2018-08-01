@@ -3,14 +3,14 @@ package com.course.millix.mescourses;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,61 +22,41 @@ public class MainDisplay extends AppCompatActivity {
 
     private String m_element = "";
     private SharedPreferences mPrefs;
-    private static final String PREFS_LIST = "PREFS_LIST";
+    private static final String PREFS_LIST_NAME = "PREFS_LIST_NAME";
+    private static final String PREFS_LIST_QTY = "PREFS_LIST_QTY";
     private static final String PREFS = "PREFS";
     private List<ItemCourse> items = new ArrayList<>();
+    ArrayList<String> listItems= new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Remove title bar
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main_display);
-
         FloatingActionButton addActionButton = findViewById(R.id.addActionButton);
-
         addActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                generateTextInputDialog("Que voulez-vous ajouter à votre liste?");
+                generateTextInputDialog();
             }
         });
-        mPrefs = getSharedPreferences(PREFS,MODE_PRIVATE);
-        if(mPrefs.contains(PREFS_LIST)){
-            for(String item : mPrefs.getStringSet(PREFS_LIST,null)){
-                addTextArea(item);
-            }
-        }
+        CustomListViewAdaptateur adapter = new CustomListViewAdaptateur((ArrayList<ItemCourse>) items, this);
 
+        //handle listview and assign adapter
+        ListView lView = findViewById(R.id.list_item_todo);
+        lView.setAdapter(adapter);
+
+        mPrefs = getSharedPreferences(PREFS, MODE_PRIVATE);
+        if (mPrefs.contains(PREFS_LIST_NAME) && mPrefs.contains(PREFS_LIST_QTY)) {
+
+            listItems.addAll(mPrefs.getStringSet(PREFS_LIST_NAME, null));
+        }
     }
 
-    private void addTextArea(String stuff) {
-        LinearLayout mainL = findViewById(R.id.layout_text);
-        final LinearLayout subL = new LinearLayout(this);
-        subL.setOrientation(LinearLayout.HORIZONTAL);
-        final LinearLayout subsubL = new LinearLayout(this  );
-        subsubL.setOrientation(LinearLayout.HORIZONTAL);
-        EditText et = new EditText(this );
-        FloatingActionButton ft = new FloatingActionButton(this);
-        ft.setImageResource(R.drawable.checked);
-        ft.setBackgroundColor(Color.BLUE);
-        ft.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                subL.removeAllViews();
-            }
-        });
-        et.setText(stuff);
-        et.setKeyListener(null);
-        subsubL.addView(et);
-        subsubL.addView(ft);
-        subL.addView(subsubL);
-        mainL.addView(subL);
-        items.add(new ItemCourse(stuff,new Date()));
-}
-
-
-    private void generateTextInputDialog(String titre) {
+    private void generateTextInputDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(titre);
+        builder.setTitle("Que voulez-vous ajouter à votre liste?");
         builder.setCancelable(false);
 
         // Set up the input
@@ -90,10 +70,10 @@ public class MainDisplay extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 m_element = input.getText().toString();
-                addTextArea(m_element);
+                items.add(new ItemCourse(m_element,new Date(),false,1));
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
@@ -103,22 +83,21 @@ public class MainDisplay extends AppCompatActivity {
         builder.show();
     }
 
+
     @Override
     protected void onPause() {
         super.onPause();
-        Set<String> set = new HashSet<>();
+        Set<String> setName = new HashSet<>();
+        Set<String> setQty = new HashSet<>();
         for(ItemCourse item : items){
-            set.add(item.getDenomination());
+            setName.add(item.getDenomination());
+            setQty.add(String.valueOf(item.getQuantite()));
         }
+
         SharedPreferences.Editor ed = mPrefs.edit();
-        ed.putStringSet(PREFS_LIST,set);
+        ed.putStringSet(PREFS_LIST_NAME, setName);
+        ed.putStringSet(PREFS_LIST_NAME, setQty);
         ed.apply();
     }
 
-
-    private void reGenerateList(List<String> items){
-        for (String item : items){
-            addTextArea(item);
-        }
-    }
 }

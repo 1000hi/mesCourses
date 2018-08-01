@@ -7,10 +7,14 @@ public class ItemCourse {
     private String denomination;
     private Date creationDate;
     private Date doneDate;
+    private boolean fait;
+    private int quantite;
 
-    public ItemCourse(String denomination, Date creationDate) {
+    public ItemCourse(String denomination, Date creationDate,boolean fait, int quantite) {
         this.denomination = denomination;
         this.creationDate = creationDate;
+        this.fait = fait;
+        this.quantite = quantite;
     }
 
     public String getDenomination() {
@@ -35,5 +39,21 @@ public class ItemCourse {
 
     public void setDoneDate(Date doneDate) {
         this.doneDate = doneDate;
+    }
+
+    public boolean isFait() {
+        return fait;
+    }
+
+    public void setFait(boolean fait) {
+        this.fait = fait;
+    }
+
+    public int getQuantite() {
+        return quantite;
+    }
+
+    public void setQuantite(int quantite) {
+        this.quantite = quantite;
     }
 }
