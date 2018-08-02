@@ -2,8 +2,12 @@ package com.course.millix.mescourses;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
+import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
@@ -12,21 +16,24 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.course.millix.mescourses.history.HistoryActivity;
+import com.course.millix.mescourses.history.persistence.HistoryManager;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-public class MainDisplay extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
+    private static final String PREFS_LIST = "PREFS_LIST";
+    private static final String PREFS = "PREFS";
     private String m_element = "";
     private SharedPreferences mPrefs;
-    private static final String PREFS_LIST_NAME = "PREFS_LIST_NAME";
-    private static final String PREFS_LIST_QTY = "PREFS_LIST_QTY";
-    private static final String PREFS = "PREFS";
     private List<ItemCourse> items = new ArrayList<>();
-    ArrayList<String> listItems= new ArrayList<>();
+    private HistoryManager hm = new HistoryManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,17 +48,30 @@ public class MainDisplay extends AppCompatActivity {
                 generateTextInputDialog();
             }
         });
-        CustomListViewAdaptateur adapter = new CustomListViewAdaptateur((ArrayList<ItemCourse>) items, this);
+        MainAcitivityCustomListViewAdaptator adapter = new MainAcitivityCustomListViewAdaptator((ArrayList<ItemCourse>) items, this);
 
         //handle listview and assign adapter
         ListView lView = findViewById(R.id.list_item_todo);
         lView.setAdapter(adapter);
-
         mPrefs = getSharedPreferences(PREFS, MODE_PRIVATE);
-        if (mPrefs.contains(PREFS_LIST_NAME) && mPrefs.contains(PREFS_LIST_QTY)) {
-
-            listItems.addAll(mPrefs.getStringSet(PREFS_LIST_NAME, null));
+        if (mPrefs.contains(PREFS_LIST)) {
+            Gson gson = new Gson();
+            String json = mPrefs.getString("PREFS_LIST", null);
+            Type type = new TypeToken<List<ItemCourse>>() {}.getType();
+            List<ItemCourse> arrayTmp = gson.fromJson(json, type);
+            items.addAll(arrayTmp);
         }
+
+
+        BottomNavigationItemView btnHist = findViewById(R.id.history_button);
+        btnHist.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), HistoryActivity.class);
+                startActivity(i);
+            }
+        });
     }
 
     private void generateTextInputDialog() {
@@ -70,7 +90,10 @@ public class MainDisplay extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 m_element = input.getText().toString();
-                items.add(new ItemCourse(m_element,new Date(),false,1));
+                if(m_element.trim().equals("")){
+                    generateAlert("Vous avez mis un champs vide");
+                }
+                items.add(new ItemCourse(m_element, new Date().toString(), false, 1));
             }
         });
         builder.setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
@@ -83,21 +106,29 @@ public class MainDisplay extends AppCompatActivity {
         builder.show();
     }
 
-
     @Override
     protected void onPause() {
         super.onPause();
-        Set<String> setName = new HashSet<>();
-        Set<String> setQty = new HashSet<>();
-        for(ItemCourse item : items){
-            setName.add(item.getDenomination());
-            setQty.add(String.valueOf(item.getQuantite()));
-        }
-
         SharedPreferences.Editor ed = mPrefs.edit();
-        ed.putStringSet(PREFS_LIST_NAME, setName);
-        ed.putStringSet(PREFS_LIST_NAME, setQty);
+        Gson gson = new Gson();
+        String json = gson.toJson(items);
+        ed.remove("PREF_LIST");
+        ed.putString("PREFS_LIST", json);
         ed.apply();
     }
 
+    public HistoryManager getHm() {
+        return hm;
+    }
+    private void generateAlert(String text) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(text)
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
 }

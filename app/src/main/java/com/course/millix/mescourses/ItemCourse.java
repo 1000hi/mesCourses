@@ -1,18 +1,15 @@
 package com.course.millix.mescourses;
 
 
-import java.util.Date;
-
 public class ItemCourse {
     private String denomination;
-    private Date creationDate;
-    private Date doneDate;
+    private String doneDate;
     private boolean fait;
     private int quantite;
 
-    public ItemCourse(String denomination, Date creationDate,boolean fait, int quantite) {
+    public ItemCourse(String denomination, String creationDate, boolean fait, int quantite) {
         this.denomination = denomination;
-        this.creationDate = creationDate;
+        this.doneDate = creationDate;
         this.fait = fait;
         this.quantite = quantite;
     }
@@ -25,28 +22,12 @@ public class ItemCourse {
         this.denomination = denomination;
     }
 
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public Date getDoneDate() {
+    public String getDoneDate() {
         return doneDate;
     }
 
-    public void setDoneDate(Date doneDate) {
+    public void setDoneDate(String doneDate) {
         this.doneDate = doneDate;
-    }
-
-    public boolean isFait() {
-        return fait;
-    }
-
-    public void setFait(boolean fait) {
-        this.fait = fait;
     }
 
     public int getQuantite() {

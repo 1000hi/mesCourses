@@ -5,4 +5,6 @@
     <string name="votre_liste">A acheter</string>
     <string name="Quantité">Quantité</string>
     <string name="quantit">Quantité :</string>
+    <string name="quand">Acheté le : </string>
+    <string name="historique">Historique</string>
 </resources>
