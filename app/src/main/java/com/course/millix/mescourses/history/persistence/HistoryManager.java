@@ -147,10 +147,11 @@ public class HistoryManager implements Serializable {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public List<ItemCourse> getHistory() {
         List<ItemCourse> articleHistory = new ArrayList<>();
+        if(!isFilePresent(DEFAULT_PATH+JSON_NAME)){
+            return articleHistory;
+        }
         String result = readJson(DEFAULT_PATH + JSON_NAME);
-        if (result == null) {
-            return null;
-        } else {
+        if (result != null) {
             try {
                 JSONArray jsonObj = new JSONArray(result);
                 articleHistory.addAll(jsonToItemList(jsonObj));
@@ -173,6 +174,11 @@ public class HistoryManager implements Serializable {
         }
 
         return listeArticle;
+    }
+
+    public boolean flushHistory() {
+        File file = new File(DEFAULT_PATH + JSON_NAME);
+        return !file.exists() || file.delete();
     }
 
 

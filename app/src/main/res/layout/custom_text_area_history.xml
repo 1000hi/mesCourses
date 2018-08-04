@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/text_rl"
+    android:id="@+id/text_history_rl"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:clickable="true"
@@ -17,6 +17,7 @@
             android:id="@+id/nameArea"
             android:layout_width="150dp"
             android:layout_height="40dp"
+            android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="20dp"
             android:ems="10"
@@ -24,33 +25,32 @@
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="SmallSp"
-            android:layout_marginLeft="16dp" />
+            tools:ignore="SmallSp" />
 
         <TextView
             android:id="@+id/quantite"
             android:layout_width="72dp"
             android:layout_height="18dp"
             android:layout_marginEnd="8dp"
+            android:layout_marginLeft="55dp"
+            android:layout_marginRight="8dp"
             android:layout_marginStart="55dp"
             android:layout_marginTop="24dp"
             android:text="@string/quantit"
             app:layout_constraintEnd_toStartOf="@+id/qtArea"
             app:layout_constraintHorizontal_bias="0.423"
             app:layout_constraintStart_toEndOf="@+id/nameArea"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginLeft="55dp"
-            android:layout_marginRight="8dp" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/qtArea"
             android:layout_width="25dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
             android:layout_marginTop="25dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginRight="16dp" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/date"
