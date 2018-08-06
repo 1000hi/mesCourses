@@ -6,10 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.course.millix.mescourses.ItemCourse;
+import com.course.millix.mescourses.Article;
 import com.course.millix.mescourses.R;
 
 import java.util.ArrayList;
@@ -18,10 +17,10 @@ import java.util.List;
 
 public class HistoryActivityCustomListViewAdaptator extends BaseAdapter implements ListAdapter {
 
-    private List<ItemCourse> historiqueListeCourse = new ArrayList<>();
+    private List<Article> historiqueListeCourse = new ArrayList<>();
     private Context context;
 
-    public HistoryActivityCustomListViewAdaptator(List<ItemCourse> historiqueListeCourse, Context context) {
+    public HistoryActivityCustomListViewAdaptator(List<Article> historiqueListeCourse, Context context) {
         this.historiqueListeCourse = historiqueListeCourse;
         this.context = context;
     }
@@ -49,7 +48,7 @@ public class HistoryActivityCustomListViewAdaptator extends BaseAdapter implemen
             view = inflater.inflate(R.layout.custom_text_area_history, null);
         }
 
-        TextView listItemText = view.findViewById(R.id.nameArea);
+        TextView listItemText = view.findViewById(R.id.name);
         listItemText.setText(historiqueListeCourse.get(position).getDenomination());
 
         TextView listItemQt = view.findViewById(R.id.qtArea);

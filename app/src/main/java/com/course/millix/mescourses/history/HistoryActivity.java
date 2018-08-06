@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ListView;
 
-import com.course.millix.mescourses.ItemCourse;
+import com.course.millix.mescourses.Article;
 import com.course.millix.mescourses.R;
 import com.course.millix.mescourses.history.persistence.HistoryManager;
 
@@ -23,7 +23,7 @@ import java.util.List;
 public class HistoryActivity extends AppCompatActivity {
 
     private HistoryManager hm = new HistoryManager();
-    private List<ItemCourse> itemHistory = new ArrayList<>();
+    private List<Article> itemHistory = new ArrayList<>();
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override

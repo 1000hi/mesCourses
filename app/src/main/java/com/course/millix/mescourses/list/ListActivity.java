@@ -1,4 +1,4 @@
-package com.course.millix.mescourses;
+package com.course.millix.mescourses.list;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -16,6 +16,9 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.course.millix.mescourses.Article;
+import com.course.millix.mescourses.R;
+import com.course.millix.mescourses.dialog.AddArticleListDialog;
 import com.course.millix.mescourses.history.HistoryActivity;
 import com.course.millix.mescourses.history.persistence.HistoryManager;
 import com.google.gson.Gson;
@@ -26,13 +29,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class ListActivity extends AppCompatActivity {
 
     private static final String PREFS_LIST = "PREFS_LIST";
     private static final String PREFS = "PREFS";
     private String m_element = "";
     private SharedPreferences mPrefs;
-    private List<ItemCourse> items = new ArrayList<>();
+    private List<Article> items = new ArrayList<>();
     private HistoryManager hm = new HistoryManager();
 
     @Override
@@ -42,13 +45,16 @@ public class MainActivity extends AppCompatActivity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main_display);
         FloatingActionButton addActionButton = findViewById(R.id.addActionButton);
+        final AddArticleListDialog aald = new AddArticleListDialog(this);
         addActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                generateTextInputDialog();
+//                generateTextInputDialog();
+                aald.show();
+
             }
         });
-        MainAcitivityCustomListViewAdaptator adapter = new MainAcitivityCustomListViewAdaptator((ArrayList<ItemCourse>) items, this);
+        ListAcitivityCustomListViewAdaptator adapter = new ListAcitivityCustomListViewAdaptator((ArrayList<Article>) items, this);
 
         //handle listview and assign adapter
         ListView lView = findViewById(R.id.list_item_todo);
@@ -57,8 +63,9 @@ public class MainActivity extends AppCompatActivity {
         if (mPrefs.contains(PREFS_LIST)) {
             Gson gson = new Gson();
             String json = mPrefs.getString("PREFS_LIST", null);
-            Type type = new TypeToken<List<ItemCourse>>() {}.getType();
-            List<ItemCourse> arrayTmp = gson.fromJson(json, type);
+            Type type = new TypeToken<List<Article>>() {
+            }.getType();
+            List<Article> arrayTmp = gson.fromJson(json, type);
             items.addAll(arrayTmp);
         }
 
@@ -90,10 +97,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 m_element = input.getText().toString();
-                if(m_element.trim().equals("")){
+                if (m_element.trim().equals("")) {
                     generateAlert("Vous avez mis un champs vide");
                 }
-                items.add(new ItemCourse(m_element, new Date().toString(), false, 1));
+                items.add(new Article(m_element, new Date().toString(), false, 1));
             }
         });
         builder.setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
@@ -120,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
     public HistoryManager getHm() {
         return hm;
     }
+
     private void generateAlert(String text) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(text)

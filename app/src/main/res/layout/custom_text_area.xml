@@ -14,7 +14,7 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/nameArea"
+            android:id="@+id/name"
             android:layout_width="150dp"
             android:layout_height="40dp"
             android:layout_marginStart="16dp"
@@ -24,7 +24,8 @@
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="SmallSp" />
+            tools:ignore="SmallSp"
+            android:layout_marginLeft="16dp" />
 
         <TextView
             android:id="@+id/quantite"
@@ -36,7 +37,7 @@
             android:text="@string/quantit"
             app:layout_constraintEnd_toStartOf="@+id/qtArea"
             app:layout_constraintHorizontal_bias="0.423"
-            app:layout_constraintStart_toEndOf="@+id/nameArea"
+            app:layout_constraintStart_toEndOf="@+id/name"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView

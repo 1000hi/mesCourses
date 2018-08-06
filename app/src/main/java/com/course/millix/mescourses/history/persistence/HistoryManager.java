@@ -5,7 +5,7 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 
-import com.course.millix.mescourses.ItemCourse;
+import com.course.millix.mescourses.Article;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -31,7 +31,7 @@ public class HistoryManager implements Serializable {
     private static final String JSON_NAME = "/history.json";
     @SuppressLint("SdCardPath")
     private static final String DEFAULT_PATH = "/data/user/0/com.course.millix.mescourses/files";
-    private List<ItemCourse> listeDeCourse = new ArrayList<>();
+    private List<Article> listeDeCourse = new ArrayList<>();
 
     /**
      * Constructeur vide
@@ -45,7 +45,7 @@ public class HistoryManager implements Serializable {
      *
      * @return la liste totale des courses
      */
-    public List<ItemCourse> getListeDeCourse() {
+    public List<Article> getListeDeCourse() {
         return listeDeCourse;
     }
 
@@ -79,11 +79,11 @@ public class HistoryManager implements Serializable {
     }
 
 
-    private String itemToJson(ItemCourse item) {
+    private String itemToJson(Article item) {
         return new Gson().toJson(item);
     }
 
-    private String itemListToJson(List<ItemCourse> items) {
+    private String itemListToJson(List<Article> items) {
         Gson gs = new Gson();
         return new Gson().toJson(items);
     }
@@ -120,9 +120,9 @@ public class HistoryManager implements Serializable {
      * @return true si sauvegarde réussie, non sinon
      */
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void save(ItemCourse item) throws JSONException {
+    public void save(Article item) throws JSONException {
 
-        List<ItemCourse> items = new ArrayList<>();
+        List<Article> items = new ArrayList<>();
         if (isFilePresent(DEFAULT_PATH + JSON_NAME)) {
             //si le json existe on va le lire, puis ajouter l'historique actuel
             String oldHistoJson = readJson(DEFAULT_PATH + JSON_NAME);
@@ -145,8 +145,8 @@ public class HistoryManager implements Serializable {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public List<ItemCourse> getHistory() {
-        List<ItemCourse> articleHistory = new ArrayList<>();
+    public List<Article> getHistory() {
+        List<Article> articleHistory = new ArrayList<>();
         if(!isFilePresent(DEFAULT_PATH+JSON_NAME)){
             return articleHistory;
         }
@@ -164,12 +164,12 @@ public class HistoryManager implements Serializable {
     }
 
 
-    private List<ItemCourse> jsonToItemList(JSONArray jsonObj) throws JSONException {
+    private List<Article> jsonToItemList(JSONArray jsonObj) throws JSONException {
 
-        List<ItemCourse> listeArticle = new ArrayList<>();
+        List<Article> listeArticle = new ArrayList<>();
         for (int i = 0; i < jsonObj.length(); i++) {
             JSONObject presObj = jsonObj.getJSONObject(i);
-            ItemCourse iCTemp = new ItemCourse(presObj.getString("denomination"), presObj.getString("doneDate"), true, Integer.valueOf(presObj.getString("quantite")));
+            Article iCTemp = new Article(presObj.getString("denomination"), presObj.getString("doneDate"), true, Integer.valueOf(presObj.getString("quantite")));
             listeArticle.add(iCTemp);
         }
 

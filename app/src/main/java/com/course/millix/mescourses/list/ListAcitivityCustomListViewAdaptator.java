@@ -1,4 +1,4 @@
-package com.course.millix.mescourses;
+package com.course.millix.mescourses.list;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -16,17 +16,20 @@ import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.course.millix.mescourses.Article;
+import com.course.millix.mescourses.R;
+
 import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Date;
 
-public class MainAcitivityCustomListViewAdaptator extends BaseAdapter implements ListAdapter {
+public class ListAcitivityCustomListViewAdaptator extends BaseAdapter implements ListAdapter {
 
-    private ArrayList<ItemCourse> listeCourse = new ArrayList<>();
+    private ArrayList<Article> listeCourse = new ArrayList<>();
     private Context context;
 
-    public MainAcitivityCustomListViewAdaptator(ArrayList<ItemCourse> list, Context context) {
+    public ListAcitivityCustomListViewAdaptator(ArrayList<Article> list, Context context) {
         this.listeCourse = list;
         this.context = context;
     }
@@ -55,7 +58,7 @@ public class MainAcitivityCustomListViewAdaptator extends BaseAdapter implements
             view = inflater.inflate(R.layout.custom_text_area, null);
         }
         //Handle TextView and display string from your list
-        TextView listItemText = view.findViewById(R.id.nameArea);
+        TextView listItemText = view.findViewById(R.id.name);
         listItemText.setText(listeCourse.get(position).getDenomination());
 
         TextView listItemQt = view.findViewById(R.id.qtArea);
@@ -71,9 +74,9 @@ public class MainAcitivityCustomListViewAdaptator extends BaseAdapter implements
         return view;
     }
 
-    private void generateModifyItemDialog(final ItemCourse itemCourse, final int position) {
+    private void generateModifyItemDialog(final Article article, final int position) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this.context);
-        builder.setTitle("Que faites vous de " + itemCourse.getDenomination() + " ?");
+        builder.setTitle("Que faites vous de " + article.getDenomination() + " ?");
         builder.setCancelable(true);
         // Set up the input
         final EditText input = new EditText(this.context);
@@ -87,12 +90,12 @@ public class MainAcitivityCustomListViewAdaptator extends BaseAdapter implements
         final EditText nameBox = new EditText(context);
         nameBox.setHint("Article");
         nameBox.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-        nameBox.setText(itemCourse.getDenomination());
+        nameBox.setText(article.getDenomination());
         layout.addView(nameBox);
 
         final EditText quantityBox = new EditText(context);
         quantityBox.setHint("Quantite");
-        quantityBox.setText(String.valueOf(itemCourse.getQuantite()));
+        quantityBox.setText(String.valueOf(article.getQuantite()));
         quantityBox.setInputType(InputType.TYPE_CLASS_NUMBER);
         layout.addView(quantityBox);
 
@@ -103,10 +106,10 @@ public class MainAcitivityCustomListViewAdaptator extends BaseAdapter implements
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                MainActivity mA = (MainActivity) context;
-                itemCourse.setDoneDate(new Date().toString());
+                ListActivity mA = (ListActivity) context;
+                article.setDoneDate(new Date().toString());
                 try {
-                    mA.getHm().save(itemCourse);
+                    mA.getHm().save(article);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -120,8 +123,8 @@ public class MainAcitivityCustomListViewAdaptator extends BaseAdapter implements
             public void onClick(DialogInterface dialog, int which) {
                 if (!nameBox.getText().toString().trim().equals("")) {
                     if (!quantityBox.getText().toString().trim().equals("0")) {
-                        itemCourse.setDenomination(nameBox.getText().toString().trim());
-                        itemCourse.setQuantite(Integer.parseInt(quantityBox.getText().toString().trim()));
+                        article.setDenomination(nameBox.getText().toString().trim());
+                        article.setQuantite(Integer.parseInt(quantityBox.getText().toString().trim()));
                         notifyDataSetChanged();
                     } else {
                         //si Il met 0 en quantité
