@@ -33,7 +33,6 @@ public class ListActivity extends AppCompatActivity {
 
     private static final String PREFS_LIST = "PREFS_LIST";
     private static final String PREFS = "PREFS";
-    private String m_element = "";
     private SharedPreferences mPrefs;
     private List<Article> items = new ArrayList<>();
     private HistoryManager hm = new HistoryManager();
@@ -49,7 +48,6 @@ public class ListActivity extends AppCompatActivity {
         addActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                generateTextInputDialog();
                 aald.show();
 
             }
@@ -81,37 +79,7 @@ public class ListActivity extends AppCompatActivity {
         });
     }
 
-    private void generateTextInputDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Que voulez-vous ajouter à votre liste?");
-        builder.setCancelable(false);
 
-        // Set up the input
-        final EditText input = new EditText(this);
-        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-        builder.setView(input);
-
-        // Set up the buttons
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                m_element = input.getText().toString();
-                if (m_element.trim().equals("")) {
-                    generateAlert("Vous avez mis un champs vide");
-                }
-                items.add(new Article(m_element, new Date().toString(), false, 1));
-            }
-        });
-        builder.setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        builder.show();
-    }
 
     @Override
     protected void onPause() {
@@ -128,15 +96,4 @@ public class ListActivity extends AppCompatActivity {
         return hm;
     }
 
-    private void generateAlert(String text) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(text)
-                .setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                    }
-                });
-        AlertDialog alert = builder.create();
-        alert.show();
-    }
 }
